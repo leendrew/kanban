@@ -13,6 +13,6 @@ module.exports = {
     project: './tsconfig.json',
     tsconfigRootDir: __dirname,
   },
-  ignorePatterns: '.eslintrc.cjs',
+  ignorePatterns: '.eslintrc.js',
   rules: {},
 };
