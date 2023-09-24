@@ -1,0 +1,62 @@
+version: "3.8"
+
+volumes:
+  db-data:
+
+# networks:
+#   app:
+#     driver: bridge
+
+services:
+  # app:
+  #   container_name: app
+  #   build:
+  #     context: ./
+  #     dockerfile: app.dockerfile
+  #     # args:
+  #     #     user: user
+  #     #     uid: 1000
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   volumes:
+  #     - ./:/var/www
+  #   ports:
+  #     - $SERVER_PORT:8080
+  #   networks:
+  #     - app
+
+  db:
+    container_name: db
+    image: postgres:14.9-alpine
+    restart: unless-stopped # or always
+    env_file: .env
+    environment:
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASS
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      # - ./sql:/docker-entrypoint-initdb.d
+    ports:
+      - $DB_PORT:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $DB_USER -d $DB_NAME"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  #   networks:
+  #     - app
+
+  # nginx:
+  #   container_name: nginx
+  #   image: nginx:1.23.3-alpine
+  #   command: nginx -g 'daemon off;' # or 'daemon off;'
+  #   depends_on:
+  #     - app
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+  #   ports:
+  #     - $NGINX_PORT:80
+  #   networks:
+  #     - app

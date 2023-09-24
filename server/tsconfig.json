@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "commonjs",
+    "target": "ES2021",
+    "lib": ["ES2021"],
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    "strict": true,
+    "sourceMap": true,
+    // "isolatedModules": true,
+    "resolveJsonModule": true,
+    // "strictPropertyInitialization": false,
+    /* Decorators Support */
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    // "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    // "noImplicitOverride": true,
+    // "noImplicitReturns": true,
+    "noImplicitAny": false,
+    // "noPropertyAccessFromIndexSignature": true,
+    // "noUncheckedIndexedAccess": true,
+
+    "declaration": true,
+    "removeComments": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}
