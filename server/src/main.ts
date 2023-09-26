@@ -1,13 +1,15 @@
 import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
-import type { Config } from './config';
+import { AppConfigService, ConfigModule } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService<Config>);
   app.use(helmet());
-  await app.listen(configService.get('port') as number);
+  // console.log(app.get(AppConfigService));
+  // const appConfigService = app.get(AppConfigService);
+  // await app.listen(appConfigService.config.port);
+  // console.log(app.select(ConfigModule).get(AppConfigService));
+  await app.listen(8080);
 }
 bootstrap();

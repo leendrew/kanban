@@ -1,27 +1,23 @@
 import { join } from 'node:path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule as NestConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
-import { getConfig, type Config } from './config';
+import { ConfigModule, DBConfigService } from './config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [getConfig],
-      envFilePath: join('..', '.env'),
-    }),
+    // NestConfigModule.forRoot({
+    //   isGlobal: true,
+    //   envFilePath: join('..', '.env'),
+    // }),
+    ConfigModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService<Config>],
-      useFactory: (config: ConfigService) => ({
+      inject: [DBConfigService],
+      useFactory: (dbConfigService: DBConfigService) => ({
         type: 'postgres',
-        database: config.get('db.name'),
-        host: config.get('db.host'),
-        port: config.get('db.port'),
-        username: config.get('db.user'),
-        password: config.get('db.pass'),
+        ...dbConfigService.config,
         entities: [join(__dirname, '..', 'api', '**', '*.entity.js')],
         synchronize: true,
         logging: true,
@@ -30,6 +26,5 @@ import { getConfig, type Config } from './config';
   ],
   controllers: [AppController],
   providers: [],
-  exports: [],
 })
 export class AppModule {}
