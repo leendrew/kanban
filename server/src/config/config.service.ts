@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 type EnvType = Record<string, { key: string; type: string | number }>;
 type ConfigType<T extends EnvType> = { [Key in keyof T]: T[Key]['type'] };
 
+// TODO: refactor with variables, example: const appEnv: EnvType = { ... };
 type AppEnv = {
   nodeEnv: {
     key: 'NODE_ENV';
