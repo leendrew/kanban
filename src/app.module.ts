@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppConfigService, ConfigModule } from './config';
+import { HashBase } from './common';
 import { HashService } from './shared';
 
 @Module({
@@ -20,13 +21,18 @@ import { HashService } from './shared';
         ...config.db,
         entities: [join(__dirname, '..', 'api', '**', '*.entity.js')],
         synchronize: config.app.nodeEnv === 'development' ? true : false,
-        logging: true,
+        logging: config.app.nodeEnv === 'development' ? false : true,
         ssl: config.app.nodeEnv === 'development' ? false : true,
       }),
     }),
   ],
   controllers: [AppController],
-  providers: [HashService],
+  providers: [
+    {
+      provide: HashBase,
+      useClass: HashService,
+    },
+  ],
   exports: [],
 })
 export class AppModule {}
