@@ -21,5 +21,6 @@ yarn start:dev
 ### prod
 
 ```bash
+cp .env.example .env
 docker-compose up --build
 ```
