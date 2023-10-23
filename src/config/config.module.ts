@@ -1,7 +1,7 @@
 import { Global, Module, type Provider } from '@nestjs/common';
-import { AppConfigService } from './config.service';
+import { ConfigService } from './config.service';
 
-const providers: Provider[] = [AppConfigService];
+const providers: Provider[] = [ConfigService];
 
 @Global()
 @Module({

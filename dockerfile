@@ -1,11 +1,11 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
-COPY ./server/package.json ./server/yarn.lock ./
+COPY ./package.json ./yarn.lock ./
 RUN yarn install --frozen-lockfile --production
-COPY ./server ./
+COPY ./ ./
 RUN yarn build
 
-FROM node:18-alpine
+FROM builder
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules

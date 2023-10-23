@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigService as NestConfigService } from '@nestjs/config';
 
 type EnvType = Record<string, { key: string; type: string | number }>;
 type ConfigType<T extends EnvType> = { [Key in keyof T]: T[Key]['type'] };
@@ -11,7 +11,7 @@ type AppEnv = {
     type: string;
   };
   port: {
-    key: 'SERVER_PORT';
+    key: 'APP_PORT';
     type: number;
   };
 };
@@ -40,8 +40,8 @@ type DBEnv = {
 };
 
 @Injectable()
-export class AppConfigService {
-  constructor(private readonly configService: ConfigService) {}
+export class ConfigService {
+  constructor(private readonly configService: NestConfigService) {}
 
   private getEnvValue<T extends EnvType, U extends T[keyof T]['type']>(
     envKey: `${T[keyof T]['key']}`,
@@ -57,7 +57,7 @@ export class AppConfigService {
   public get app(): ConfigType<AppEnv> {
     return {
       nodeEnv: this.getEnvValue<AppEnv, string>('NODE_ENV'),
-      port: this.getEnvValue<AppEnv, number>('SERVER_PORT', true),
+      port: this.getEnvValue<AppEnv, number>('APP_PORT', true),
     };
   }
 

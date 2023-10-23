@@ -3,20 +3,18 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
-import { AppConfigService, ConfigModule } from './config';
-import { HashBase } from './common';
-import { HashService } from './shared';
+import { ConfigService, ConfigModule } from './config';
 
 @Module({
   imports: [
     NestConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: join('..', '.env'),
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [AppConfigService],
-      useFactory: (config: AppConfigService) => ({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
         type: 'postgres',
         ...config.db,
         entities: [join(__dirname, '..', 'api', '**', '*.entity.js')],
@@ -27,12 +25,7 @@ import { HashService } from './shared';
     }),
   ],
   controllers: [AppController],
-  providers: [
-    {
-      provide: HashBase,
-      useClass: HashService,
-    },
-  ],
+  providers: [],
   exports: [],
 })
 export class AppModule {}
