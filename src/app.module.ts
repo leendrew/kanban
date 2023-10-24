@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { ConfigService, ConfigModule } from './config';
-import { UsersModule } from './api/users';
+import { UserModule } from './api/user';
 import { AuthModule } from './api/auth';
 
 @Module({
@@ -26,7 +26,7 @@ import { AuthModule } from './api/auth';
         ssl: config.app.nodeEnv === 'development' ? false : true,
       }),
     }),
-    UsersModule,
+    UserModule,
     AuthModule,
   ],
   controllers: [AppController],
