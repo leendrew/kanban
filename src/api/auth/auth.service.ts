@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
-import { HashBase } from '../../common';
-import { User } from '../users';
+import { HashService } from '../../common';
+import { User } from '../user';
 import { RegisterDto, LoginDto } from './dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-    private readonly hashService: HashBase,
+    private readonly hashService: HashService,
   ) {}
 
   async register(dto: RegisterDto) {
