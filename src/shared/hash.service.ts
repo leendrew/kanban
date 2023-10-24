@@ -1,6 +1,6 @@
 import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
 import { Global, Injectable } from '@nestjs/common';
-import { HashBase } from '../common';
+import type { HashBase } from '../common';
 
 @Global()
 @Injectable()
