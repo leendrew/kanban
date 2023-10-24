@@ -11,7 +11,7 @@
     "sourceMap": true,
     // "isolatedModules": true,
     "resolveJsonModule": true,
-    // "strictPropertyInitialization": false,
+    "strictPropertyInitialization": false,
     /* Decorators Support */
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
