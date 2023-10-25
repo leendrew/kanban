@@ -1,9 +1,9 @@
-import { join } from 'node:path';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
+import { ConfigModule } from './config';
+import { TypeOrmService } from './shared';
 import { AppController } from './app.controller';
-import { ConfigService, ConfigModule } from './config';
 import { UserModule } from './api/user';
 import { AuthModule } from './api/auth';
 
@@ -13,18 +13,7 @@ import { AuthModule } from './api/auth';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        ...config.db,
-        entities: [join(__dirname, 'api', '**', '*.entity.js')],
-        migrations: [join(__dirname, 'migrations', '*.ts')],
-        synchronize: config.app.nodeEnv === 'development' ? true : false,
-        logging: config.app.nodeEnv === 'development' ? false : true,
-        ssl: config.app.nodeEnv === 'development' ? false : true,
-      }),
-    }),
+    TypeOrmModule.forRootAsync({ useClass: TypeOrmService }),
     ConfigModule,
     UserModule,
     AuthModule,

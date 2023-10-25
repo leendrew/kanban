@@ -1,8 +1,7 @@
 import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
-import { Global, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import type { HashService } from '../common';
 
-@Global()
 @Injectable()
 export class CryptoService implements HashService {
   constructor() {}

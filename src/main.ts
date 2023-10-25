@@ -9,7 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix('/api');
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe());
-  const configService = app.get(ConfigService);
-  await app.listen(configService.app.port);
+  const config = app.get(ConfigService);
+  await app.listen(config.app.port);
 }
 bootstrap();
