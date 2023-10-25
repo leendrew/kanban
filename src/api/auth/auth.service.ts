@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 import type { Repository } from 'typeorm';
+import { ConfigService } from '../../config';
 import { HashService } from '../../common';
 import { User } from '../user';
 import { RegisterDto, LoginDto } from './dto';
@@ -9,7 +11,9 @@ import { RegisterDto, LoginDto } from './dto';
 export class AuthService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService,
     private readonly hashService: HashService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -39,7 +43,17 @@ export class AuthService {
       throw new Error('Wrong password');
     }
 
-    // TODO: jwt
-    return true;
+    const accessToken = await this.jwtService.signAsync(
+      {
+        sub: user.id,
+        login: user.login,
+      },
+      {
+        secret: this.configService.jwt.secret,
+        expiresIn: this.configService.jwt.accessTtl,
+      },
+    );
+
+    return { access: accessToken };
   }
 }

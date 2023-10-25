@@ -14,7 +14,6 @@ import { AuthModule } from './api/auth';
       envFilePath: '.env',
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         type: 'postgres',
@@ -26,6 +25,7 @@ import { AuthModule } from './api/auth';
         ssl: config.app.nodeEnv === 'development' ? false : true,
       }),
     }),
+    ConfigModule,
     UserModule,
     AuthModule,
   ],

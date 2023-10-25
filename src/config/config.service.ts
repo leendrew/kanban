@@ -39,6 +39,17 @@ type DBEnv = {
   };
 };
 
+type JWTEnv = {
+  secret: {
+    key: 'JWT_SECRET';
+    type: string;
+  };
+  accessTtl: {
+    key: 'JWT_ACCESS_TTL';
+    type: number;
+  };
+};
+
 @Injectable()
 export class ConfigService {
   constructor(private readonly configService: NestConfigService) {}
@@ -68,6 +79,13 @@ export class ConfigService {
       port: this.getEnvValue<DBEnv, number>('DB_PORT', true),
       username: this.getEnvValue<DBEnv, string>('DB_USER'),
       password: this.getEnvValue<DBEnv, string>('DB_PASS'),
+    };
+  }
+
+  public get jwt(): ConfigType<JWTEnv> {
+    return {
+      secret: this.getEnvValue<JWTEnv, string>('JWT_SECRET'),
+      accessTtl: this.getEnvValue<JWTEnv, number>('JWT_ACCESS_TTL', true),
     };
   }
 }
