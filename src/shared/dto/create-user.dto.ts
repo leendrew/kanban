@@ -1,12 +1,13 @@
 import { IsNotEmpty, MinLength } from 'class-validator';
+import type { CreateUserPayload } from '../../api/user/user.types';
 
-export class RegisterDto {
+export class CreateUserDto implements CreateUserPayload {
   @IsNotEmpty()
   @MinLength(3)
   name: string;
 
-  @MinLength(3)
   @IsNotEmpty()
+  @MinLength(3)
   login: string;
 
   @IsNotEmpty()

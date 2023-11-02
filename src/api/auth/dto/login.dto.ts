@@ -1,6 +1,7 @@
 import { IsNotEmpty, MinLength } from 'class-validator';
+import type { LoginPayload } from '../auth.types';
 
-export class LoginDto {
+export class LoginDto implements LoginPayload {
   @IsNotEmpty()
   login: string;
 

@@ -1,13 +1,14 @@
 import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import type { User } from './entities';
+import type { CreateUserDto } from '../../shared/dto';
 
 @Controller('/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/')
-  create(@Body() dto: { name: string; login: string; password: string }) {
+  create(@Body() dto: CreateUserDto) {
     return this.userService.createOne(dto);
   }
 
