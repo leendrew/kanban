@@ -1,32 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { UserService } from './user.service';
+import type { User } from './entities';
 
 @Controller('/users')
 export class UserController {
-  constructor(private readonly usersService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: unknown) {
-    return this.usersService.create(createUserDto);
+  @Post('/')
+  create(@Body() dto: { name: string; login: string; password: string }) {
+    return this.userService.createOne(dto);
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @Get('/')
+  findAll(): Promise<User[]> {
+    return this.userService.getAll();
   }
 
   @Get('/:id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(parseInt(id, 10));
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<User | null> {
+    return this.userService.getOneBy({ id });
   }
 
-  @Patch('/:id')
-  update(@Param('id') id: string, @Body() updateUserDto: unknown) {
-    return this.usersService.update(parseInt(id, 10), updateUserDto);
-  }
+  // @Patch('/:id')
+  // update(@Param('id') id: string, @Body() updateUserDto: unknown) {
+  // return this.userService.update(parseInt(id, 10), updateUserDto);
+  // }
 
-  @Delete('/:id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(parseInt(id, 10));
-  }
+  // @Delete('/:id')
+  // remove(@Param('id') id: string) {
+  // return this.userService.remove(parseInt(id, 10));
+  // }
 }

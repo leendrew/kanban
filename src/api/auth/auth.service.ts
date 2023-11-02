@@ -1,28 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
-import type { Repository } from 'typeorm';
 import { ConfigService } from '../../config';
 import { HashService } from '../../common';
 import { UserService } from '../user/user.service';
 import type { User } from '../user/entities';
+import type { RegisterPayload, LoginPayload } from './auth.types';
+import type { TokenPayload, TokenData, TokenResponse } from '../jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly configService: ConfigService,
     private readonly hashService: HashService,
     private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) {}
 
-  async register(dto: RegisterDto) {
+  async register(dto: RegisterPayload): Promise<User> {
     try {
       const { name, login, password } = dto;
       const hashedPassword = await this.hashService.hash(password);
 
-      const user = this.userRepository.create({ name, login, password: hashedPassword });
-      const createdUser = await this.userRepository.save(user);
+      const createdUser = await this.userService.createOne({
+        name,
+        login,
+        password: hashedPassword,
+      });
 
       return createdUser;
     } catch (e) {
@@ -31,9 +34,10 @@ export class AuthService {
     }
   }
 
-  async login(dto: LoginDto) {
-    const { login, password } = dto;
-    const user = await this.userRepository.findOneBy({ login });
+  async login(payload: LoginPayload): Promise<TokenResponse> {
+    const { login, password } = payload;
+
+    const user = await this.userService.getOneBy({ login });
     if (!user) {
       throw new Error("User doesn't exist");
     }
@@ -47,7 +51,7 @@ export class AuthService {
       {
         sub: user.id,
         login: user.login,
-      },
+      } as TokenData,
       {
         secret: this.configService.jwt.secret,
         expiresIn: this.configService.jwt.accessTtl,
