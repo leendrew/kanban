@@ -4,8 +4,6 @@ import type { HashService } from '../common';
 
 @Injectable()
 export class CryptoService implements HashService {
-  constructor() {}
-
   hash(data: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const salt = randomBytes(16).toString('hex');
@@ -19,7 +17,7 @@ export class CryptoService implements HashService {
     });
   }
 
-  async compare(data: string, hash: string): Promise<boolean> {
+  compare(data: string, hash: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const [salt, key] = hash.split(':');
       const encryptedKey = Buffer.from(key, 'hex');

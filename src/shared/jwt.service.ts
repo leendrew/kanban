@@ -6,7 +6,7 @@ import { ConfigService } from '../config';
 export class JwtService implements JwtOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
 
-  createJwtOptions(): JwtModuleOptions | Promise<JwtModuleOptions> {
+  createJwtOptions(): JwtModuleOptions {
     const config = this.configService;
 
     return { ...config.jwt };

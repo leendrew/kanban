@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import type { Repository } from 'typeorm';
 import { ConfigService } from '../../config';
 import { HashService } from '../../common';
-import { User } from '../user';
-import { RegisterDto, LoginDto } from './dto';
+import { UserService } from '../user/user.service';
+import type { User } from '../user/entities';
 
 @Injectable()
 export class AuthService {

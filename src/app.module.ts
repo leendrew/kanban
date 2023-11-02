@@ -4,8 +4,8 @@ import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { ConfigModule } from './config';
 import { TypeOrmService } from './shared';
 import { AppController } from './app.controller';
-import { UserModule } from './api/user';
-import { AuthModule } from './api/auth';
+import { UserModule } from './api/user/user.module';
+import { AuthModule } from './api/auth/auth.module';
 
 @Module({
   imports: [
