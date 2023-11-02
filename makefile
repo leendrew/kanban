@@ -9,6 +9,12 @@ up-db-dev:
 up-app-dev:
 	yarn start:dev
 
+# stop
+stop-dev: stop-db-dev
+
+stop-db-dev:
+	docker-compose stop db
+
 # down
 down-dev: down-db-dev
 
@@ -25,6 +31,15 @@ up-db-prod:
 
 up-app-prod:
 	docker-compose up app -d
+
+# stop
+stop-prod: stop-db-prod stop-app-prod
+
+stop-db-prod:
+	docker-compose stop db
+
+stop-app-prod:
+	docker-compose stop app
 
 # down
 down-prod: down-db-prod down-app-prod
