@@ -4,8 +4,15 @@ import { ConfigService } from '../../config';
 import { HashService } from '../../common';
 import { UserService } from '../user/user.service';
 import type { User } from '../user/entities';
-import type { RegisterPayload, LoginPayload } from './auth.types';
-import type { TokenPayload, TokenData, TokenResponse } from './jwt';
+import type { RegisterPayload, LoginPayload, RefreshPayload } from './auth.types';
+import type {
+  TokenPayload,
+  TokenData,
+  TokenResponse,
+  Token,
+  CreateTokenPayload,
+  CreateAccessTokenPayload,
+} from './jwt';
 
 @Injectable()
 export class AuthService {
@@ -47,23 +54,66 @@ export class AuthService {
       throw new Error('Wrong password');
     }
 
-    const accessToken = await this.jwtService.signAsync(
+    return this.createTokenPairs({ id: user.id, login: user.login });
+  }
+
+  createToken<T>(payload: CreateTokenPayload<T>): Promise<Token> {
+    const { id, ttl, payload: tokenPayload } = payload;
+
+    return this.jwtService.signAsync(
       {
-        sub: user.id,
-        login: user.login,
+        sub: id,
+        ...tokenPayload,
       } as TokenData,
       {
         secret: this.configService.jwt.secret,
-        expiresIn: this.configService.jwt.accessTtl,
+        expiresIn: ttl,
       },
     );
+  }
 
-    return { access: accessToken };
+  async createTokenPairs(payload: Pick<User, 'id' | 'login'>): Promise<TokenResponse> {
+    const { id, login } = payload;
+
+    const [access, refresh] = await Promise.all([
+      this.createToken<CreateAccessTokenPayload>({
+        id,
+        ttl: this.configService.jwt.accessTtl,
+        payload: { login },
+      }),
+
+      this.createToken({
+        id: id,
+        ttl: this.configService.jwt.refreshTtl,
+      }),
+    ]);
+
+    return { access, refresh };
   }
 
   validate(payload: TokenPayload): Promise<User | null> {
     console.log('validate payload', payload);
 
     return this.userService.getOneBy({ id: payload.sub });
+  }
+
+  async refresh(payload: RefreshPayload) {
+    const { refreshToken: token } = payload;
+
+    try {
+      const { sub: id } = await this.jwtService.verifyAsync<{ sub: User['id'] }>(token, {
+        secret: this.configService.jwt.secret,
+      });
+
+      const user = await this.userService.getOneBy({ id });
+      if (!user) {
+        throw new Error("User doesn't exist");
+      }
+
+      return this.createTokenPairs({ id: user.id, login: user.login });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 }

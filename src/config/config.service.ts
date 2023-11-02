@@ -48,6 +48,10 @@ type JWTEnv = {
     key: 'JWT_ACCESS_TTL';
     type: number;
   };
+  refreshTtl: {
+    key: 'JWT_REFRESH_TTL';
+    type: number;
+  };
 };
 
 @Injectable()
@@ -86,6 +90,7 @@ export class ConfigService {
     return {
       secret: this.getEnvValue<JWTEnv, string>('JWT_SECRET'),
       accessTtl: this.getEnvValue<JWTEnv, number>('JWT_ACCESS_TTL', true),
+      refreshTtl: this.getEnvValue<JWTEnv, number>('JWT_REFRESH_TTL', true),
     };
   }
 }

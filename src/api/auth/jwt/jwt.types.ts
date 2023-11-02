@@ -14,8 +14,13 @@ export interface TokenTime {
 
 export type TokenPayload = TokenData & TokenTime;
 
+export type CreateTokenPayload<T> = Pick<User, 'id'> & { ttl: number; payload?: T };
+
+export type CreateAccessTokenPayload = Pick<User, 'login'>;
+
 export type Token = string;
 
 export interface TokenResponse {
   access: Token;
+  refresh: Token;
 }
