@@ -5,7 +5,7 @@ import { HashService } from '../../common';
 import { CryptoService, JwtService } from '../../shared';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtStrategy } from '../jwt';
+import { JwtStrategy } from './jwt';
 import { UserModule } from '../user/user.module';
 
 @Module({

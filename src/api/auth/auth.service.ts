@@ -5,7 +5,7 @@ import { HashService } from '../../common';
 import { UserService } from '../user/user.service';
 import type { User } from '../user/entities';
 import type { RegisterPayload, LoginPayload } from './auth.types';
-import type { TokenPayload, TokenData, TokenResponse } from '../jwt';
+import type { TokenPayload, TokenData, TokenResponse } from './jwt';
 
 @Injectable()
 export class AuthService {
