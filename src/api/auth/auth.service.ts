@@ -12,6 +12,8 @@ import type {
   Token,
   CreateTokenPayload,
   CreateAccessTokenPayload,
+  CreateTokenPairsPayload,
+  VerifyAccessTokenData,
 } from './jwt';
 
 @Injectable()
@@ -72,7 +74,7 @@ export class AuthService {
     );
   }
 
-  async createTokenPairs(payload: Pick<User, 'id' | 'login'>): Promise<TokenResponse> {
+  async createTokenPairs(payload: CreateTokenPairsPayload): Promise<TokenResponse> {
     const { id, login } = payload;
 
     const [access, refresh] = await Promise.all([
@@ -97,11 +99,11 @@ export class AuthService {
     return this.userService.getOneBy({ id: payload.sub });
   }
 
-  async refresh(payload: RefreshPayload) {
+  async refresh(payload: RefreshPayload): Promise<TokenResponse> {
     const { refreshToken: token } = payload;
 
     try {
-      const { sub: id } = await this.jwtService.verifyAsync<{ sub: User['id'] }>(token, {
+      const { sub: id } = await this.jwtService.verifyAsync<VerifyAccessTokenData>(token, {
         secret: this.configService.jwt.secret,
       });
 
