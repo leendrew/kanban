@@ -41,4 +41,28 @@ export class UserService {
       throw e;
     }
   }
+
+  async updateOne(id: number, payload: Partial<User>): Promise<User | null> {
+    try {
+      await this.repository.update(id, payload);
+      const updatedUser = await this.repository.findOneBy({ id });
+
+      return updatedUser;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+
+  async deleteOne(id: number) {
+    try {
+      const deletedUser = await this.repository.findOneBy({ id });
+      await this.repository.delete({ id });
+
+      return deletedUser;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
 }
