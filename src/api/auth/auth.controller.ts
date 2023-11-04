@@ -5,20 +5,20 @@ import type { CreateUserDto } from '../../shared/dto';
 
 @Controller('/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly service: AuthService) {}
 
   @Post('/register')
   register(@Body() dto: CreateUserDto) {
-    return this.authService.register(dto);
+    return this.service.register(dto);
   }
 
   @Post('/login')
   login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
+    return this.service.login(dto);
   }
 
   @Post('/refresh')
   refresh(@Body() dto: RefreshDto) {
-    return this.authService.refresh(dto);
+    return this.service.refresh(dto);
   }
 }
