@@ -6,6 +6,8 @@ import { TypeOrmService } from './shared';
 import { AppController } from './app.controller';
 import { UserModule } from './api/user/user.module';
 import { AuthModule } from './api/auth/auth.module';
+import { BoardModule } from './api/board/board.module';
+import { TaskModule } from './api/task/task.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { AuthModule } from './api/auth/auth.module';
     ConfigModule,
     UserModule,
     AuthModule,
+    BoardModule,
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [],
