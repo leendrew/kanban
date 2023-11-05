@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { BoardService } from './board.service';
 import type { Board } from './board.entity';
-import type { CreateBoardDto, UpdateBoardDto } from './dto';
+import type { GetBoardQueryDto, CreateBoardDto, UpdateBoardDto } from './dto';
 
 @Controller('/boards')
 export class BoardController {
@@ -13,7 +23,11 @@ export class BoardController {
   }
 
   @Get('/')
-  findAll(): Promise<Board[]> {
+  findAll(@Query() query: GetBoardQueryDto): Promise<Board | null | Board[]> {
+    const { name } = query;
+    if (name) {
+      return this.service.getOneBy({ name });
+    }
     return this.service.getAll();
   }
 
