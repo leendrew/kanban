@@ -1,5 +1,6 @@
-import { Entity, Column } from 'typeorm';
-import { EntityBase } from '../../../common';
+import { Entity, Column, OneToMany } from 'typeorm';
+import { EntityBase } from '../../common';
+import { Board } from '../board/board.entity';
 
 @Entity('users')
 export class User extends EntityBase {
@@ -11,4 +12,7 @@ export class User extends EntityBase {
 
   @Column({ type: 'text', nullable: false })
   password: string;
+
+  @OneToMany(() => Board, (b) => b.id)
+  boards: Board[];
 }

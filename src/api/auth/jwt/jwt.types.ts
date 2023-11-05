@@ -1,4 +1,4 @@
-import type { User } from '../../user/entities';
+import type { User } from '../../user/user.entity';
 
 export interface TokenData {
   sub: User['id'];

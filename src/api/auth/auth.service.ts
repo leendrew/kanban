@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '../../config';
 import { HashService } from '../../common';
 import { UserService } from '../user/user.service';
-import type { User } from '../user/entities';
+import type { User } from '../user/user.entity';
 import type { RegisterPayload, LoginPayload, RefreshPayload } from './auth.types';
 import type {
   TokenPayload,

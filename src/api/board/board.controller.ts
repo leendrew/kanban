@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { BoardService } from './board.service';
-import type { Board } from './entities';
+import type { Board } from './board.entity';
 import type { CreateBoardDto } from './dto';
 
 @Controller('/boards')

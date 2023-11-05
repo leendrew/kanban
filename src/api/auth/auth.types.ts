@@ -1,5 +1,5 @@
 import type { CreateUserPayload } from '../user/user.types';
-import type { User } from '../user/entities';
+import type { User } from '../user/user.entity';
 import type { TokenResponse } from './jwt';
 
 export type RegisterPayload = CreateUserPayload;
