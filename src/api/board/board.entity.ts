@@ -8,10 +8,10 @@ export class Board extends EntityBase {
   @Column({ type: 'varchar', nullable: false })
   name: string;
 
-  @ManyToOne(() => User, (u) => u.id, { cascade: ['update', 'remove'] })
+  @ManyToOne(() => User, (u) => u.boards, { cascade: ['update', 'remove'] })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @OneToMany(() => Task, (t) => t.id)
+  @OneToMany(() => Task, (t) => t.board)
   tasks: Task[];
 }
