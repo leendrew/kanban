@@ -2,6 +2,8 @@ import type { User } from './user.entity';
 
 export type CreateUserPayload = Pick<User, 'login' | 'name' | 'password'>;
 
+export type GetUserPayload = Partial<Pick<User, 'login'>>;
+
 export type GetUserByPayload = Pick<User, 'id'> | Pick<User, 'login'>;
 
 type UserWithoutMeta = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'boards'>;

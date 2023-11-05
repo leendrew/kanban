@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Patch, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import type { User } from './user.entity';
-import type { CreateUserDto, UpdateUserDto } from './dto';
+import type { GetUserDto, CreateUserDto, UpdateUserDto } from './dto';
 
 @Controller('/users')
 export class UserController {
@@ -13,7 +13,10 @@ export class UserController {
   }
 
   @Get('/')
-  findAll(): Promise<User[]> {
+  findAll(@Body() dto: GetUserDto): Promise<User | null | User[]> {
+    if (dto.login) {
+      return this.service.getOneBy({ login: dto.login });
+    }
     return this.service.getAll();
   }
 
