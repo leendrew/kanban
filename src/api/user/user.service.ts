@@ -3,10 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 import { User } from './user.entity';
 import type { CreateUserPayload, GetUserByPayload, UpdateUserPayload } from './user.types';
+import { HashService } from '../../common';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private readonly repository: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private readonly repository: Repository<User>,
+    private readonly hashService: HashService,
+  ) {}
 
   async createOne(payload: CreateUserPayload): Promise<User> {
     try {
@@ -22,7 +26,7 @@ export class UserService {
 
   async getOneBy(payload: GetUserByPayload): Promise<User | null> {
     try {
-      const user = await this.repository.findOneBy({ ...payload });
+      const user = await this.repository.findOneBy(payload);
 
       return user;
     } catch (e) {
@@ -44,6 +48,9 @@ export class UserService {
 
   async updateOne(id: User['id'], payload: UpdateUserPayload): Promise<User | null> {
     try {
+      if (payload.password) {
+        payload.password = await this.hashService.hash(payload.password);
+      }
       await this.repository.update(id, payload);
       const updatedUser = await this.repository.findOneBy({ id });
 
