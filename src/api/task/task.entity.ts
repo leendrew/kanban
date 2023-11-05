@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { EntityBase } from '../../common';
 import { Board } from '../board/board.entity';
 
@@ -11,5 +11,6 @@ export class Task extends EntityBase {
   isCompleted: boolean;
 
   @ManyToOne(() => Board, (b) => b.id, { cascade: ['update', 'remove'] })
+  @JoinColumn({ name: 'board_id' })
   board: Board;
 }
