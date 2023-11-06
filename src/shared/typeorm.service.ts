@@ -15,7 +15,7 @@ export class TypeOrmService implements TypeOrmOptionsFactory {
       type: 'postgres',
       ...config.db,
       entities: [join(__dirname, '..', 'api', '**', '*.entity.js')],
-      migrations: [join(__dirname, '..', 'migrations', '*.ts')],
+      migrations: [join(__dirname, '..', 'database', 'migrations', '*.ts')],
       synchronize: isDev ? true : false,
       logging: isDev ? false : true,
       ssl: isDev ? false : true,
