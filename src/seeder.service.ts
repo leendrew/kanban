@@ -6,9 +6,9 @@ import { User } from './api/user/user.entity';
 import { Board } from './api/board/board.entity';
 import { Task } from './api/task/task.entity';
 
-const USERS_COUNT = 5;
-const BOARDS_COUNT = 10;
-const TASKS_COUNT = 15;
+const USERS_COUNT = 10;
+const BOARDS_COUNT = 50;
+const TASKS_COUNT = 100;
 
 function randomIntTo(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -32,9 +32,8 @@ export class SeederService {
     for (let i = 1; i <= USERS_COUNT; i++) {
       const user = new User();
 
-      user.id = i;
       user.name = faker.person.firstName();
-      user.login = faker.word.noun({ length: { min: 3, max: 6 } });
+      user.login = `user_${i}`;
       user.password = 'pass';
 
       await this.userRepository.save(user);
@@ -48,8 +47,7 @@ export class SeederService {
     for (let i = 1; i <= BOARDS_COUNT; i++) {
       const board = new Board();
 
-      board.id = i;
-      board.name = faker.word.noun({ length: { min: 3, max: 5 } });
+      board.name = `board_${i}`;
       board.user = await this.userRepository.findOneByOrFail({
         id: randomIntTo(1, USERS_COUNT),
       });
@@ -65,7 +63,6 @@ export class SeederService {
     for (let i = 1; i <= TASKS_COUNT; i++) {
       const task = new Task();
 
-      task.id = i;
       task.name = faker.lorem.words({ min: 1, max: 5 });
       task.isCompleted = !!faker.number.int({ min: 0, max: 1 });
       task.board = await this.boardRepository.findOneByOrFail({
