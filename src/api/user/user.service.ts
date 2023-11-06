@@ -46,7 +46,7 @@ export class UserService {
     }
   }
 
-  async updateOne(id: User['id'], payload: UpdateUserPayload): Promise<User | null> {
+  async updateOne(id: User['id'], payload: UpdateUserPayload): Promise<User> {
     try {
       if (payload.password) {
         payload.password = await this.hashService.hash(payload.password);
@@ -54,16 +54,20 @@ export class UserService {
       await this.repository.update(id, payload);
       const updatedUser = await this.repository.findOneBy({ id });
 
-      return updatedUser;
+      return updatedUser as User;
     } catch (e) {
       console.error(e);
       throw e;
     }
   }
 
-  async deleteOne(id: User['id']) {
+  async deleteOne(id: User['id']): Promise<User> {
     try {
       const deletedUser = await this.repository.findOneBy({ id });
+      if (!deletedUser) {
+        throw new Error("User doesn't exist");
+      }
+
       await this.repository.delete({ id });
 
       return deletedUser;

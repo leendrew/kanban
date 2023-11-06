@@ -58,10 +58,10 @@ export class BoardService {
     }
   }
 
-  async updateOne(id: Board['id'], payload: UpdateBoardPayload) {
+  async updateOne(id: Board['id'], payload: UpdateBoardPayload): Promise<Board> {
     try {
       const { name, userId } = payload;
-      let user: User | undefined = undefined;
+      let user: User | undefined;
 
       if (userId) {
         const dbUser = await this.userService.getOneBy({ id: userId });
@@ -74,16 +74,20 @@ export class BoardService {
       await this.repository.update(id, { name, user });
       const updatedBoard = await this.repository.findOneBy({ id });
 
-      return updatedBoard;
+      return updatedBoard as Board;
     } catch (e) {
       console.error(e);
       throw e;
     }
   }
 
-  async deleteOne(id: Board['id']) {
+  async deleteOne(id: Board['id']): Promise<Board> {
     try {
       const deletedBoard = await this.repository.findOneBy({ id });
+      if (!deletedBoard) {
+        throw new Error("Board doesn't exist");
+      }
+
       await this.repository.delete({ id });
 
       return deletedBoard;

@@ -42,21 +42,25 @@ export class TaskService {
     }
   }
 
-  async updateOne(id: Task['id'], payload: UpdateTaskPayload) {
+  async updateOne(id: Task['id'], payload: UpdateTaskPayload): Promise<Task> {
     try {
       await this.repository.update(id, payload);
       const updatedTask = await this.repository.findOneBy({ id });
 
-      return updatedTask;
+      return updatedTask as Task;
     } catch (e) {
       console.error(e);
       throw e;
     }
   }
 
-  async deleteOne(id: Task['id']) {
+  async deleteOne(id: Task['id']): Promise<Task> {
     try {
       const deletedTask = await this.repository.findOneBy({ id });
+      if (!deletedTask) {
+        throw new Error("Task doesn't exist");
+      }
+
       await this.repository.delete({ id });
 
       return deletedTask;
