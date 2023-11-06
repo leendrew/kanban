@@ -10,7 +10,7 @@ export class User extends EntityBase {
   @Column({ type: 'varchar', nullable: false, unique: true })
   login: string;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: false, select: false })
   password: string;
 
   @OneToMany(() => Board, (b) => b.user)
