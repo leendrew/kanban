@@ -8,7 +8,7 @@ export class Board extends EntityBase {
   @Column({ type: 'varchar', nullable: false })
   name: string;
 
-  @ManyToOne(() => User, (u) => u.boards, { cascade: ['update', 'remove'] })
+  @ManyToOne(() => User, (u) => u.boards, { cascade: ['update', 'remove'], eager: true })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

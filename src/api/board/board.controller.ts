@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { BoardService } from './board.service';
 import type { Board } from './board.entity';
-import type { GetBoardQueryDto, CreateBoardDto, UpdateBoardDto } from './dto';
+import type { GetManyBoardsQueryDto, CreateBoardDto, UpdateBoardDto } from './dto';
 
 @Controller('/boards')
 export class BoardController {
@@ -23,12 +23,11 @@ export class BoardController {
   }
 
   @Get('/')
-  findAll(@Query() query: GetBoardQueryDto): Promise<Board | null | Board[]> {
-    const { name } = query;
-    if (name) {
-      return this.service.getOneBy({ name });
-    }
-    return this.service.getAll();
+  findAll(@Query() query: GetManyBoardsQueryDto): Promise<Board | null | Board[]> {
+    const { name, userId } = query;
+    const payload = { name, user: { id: userId } };
+
+    return this.service.getAllBy(payload);
   }
 
   @Get('/:id')

@@ -2,15 +2,31 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 import { Board } from './board.entity';
-import type { CreateBoardPayload, GetBoardByPayload, UpdateBoardPayload } from './board.types';
+import type {
+  CreateBoardPayload,
+  GetManyBoardsPayload,
+  GetBoardByPayload,
+  UpdateBoardPayload,
+} from './board.types';
+import { UserService } from '../user/user.service';
+import type { User } from '../user/user.entity';
 
 @Injectable()
 export class BoardService {
-  constructor(@InjectRepository(Board) private readonly repository: Repository<Board>) {}
+  constructor(
+    @InjectRepository(Board) private readonly repository: Repository<Board>,
+    private readonly userService: UserService,
+  ) {}
 
   async createOne(payload: CreateBoardPayload): Promise<Board> {
+    const { name, userId } = payload;
     try {
-      const board = this.repository.create(payload);
+      const user = await this.userService.getOneBy({ id: userId });
+      if (!user) {
+        throw new Error("User doesn't exist");
+      }
+
+      const board = this.repository.create({ name, user });
       const createdBoard = await this.repository.save(board);
 
       return createdBoard;
@@ -22,7 +38,7 @@ export class BoardService {
 
   async getOneBy(payload: GetBoardByPayload): Promise<Board | null> {
     try {
-      const board = await this.repository.findOneBy({ ...payload });
+      const board = await this.repository.findOneBy(payload);
 
       return board;
     } catch (e) {
@@ -31,9 +47,9 @@ export class BoardService {
     }
   }
 
-  async getAll(): Promise<Board[]> {
+  async getAllBy(payload: GetManyBoardsPayload): Promise<Board[]> {
     try {
-      const boards = await this.repository.find();
+      const boards = await this.repository.findBy(payload);
 
       return boards;
     } catch (e) {
@@ -44,7 +60,18 @@ export class BoardService {
 
   async updateOne(id: Board['id'], payload: UpdateBoardPayload) {
     try {
-      await this.repository.update(id, payload);
+      const { name, userId } = payload;
+      let user: User | undefined = undefined;
+
+      if (userId) {
+        const dbUser = await this.userService.getOneBy({ id: userId });
+        if (!dbUser) {
+          throw new Error("User doesn't exist");
+        }
+        user = dbUser;
+      }
+
+      await this.repository.update(id, { name, user });
       const updatedBoard = await this.repository.findOneBy({ id });
 
       return updatedBoard;
