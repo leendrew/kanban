@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 import { Task } from './task.entity';
-import type { CreateTaskPayload, GetTaskByPayload, UpdateTaskPayload } from './task.types';
+import type {
+  CreateTaskPayload,
+  GetManyTasksPayload,
+  GetTaskByPayload,
+  UpdateTaskPayload,
+} from './task.types';
 
 @Injectable()
 export class TaskService {
@@ -31,9 +36,9 @@ export class TaskService {
     }
   }
 
-  async getAll(): Promise<Task[]> {
+  async getAllBy(payload: GetManyTasksPayload): Promise<Task[]> {
     try {
-      const tasks = await this.repository.find();
+      const tasks = await this.repository.findBy(payload);
 
       return tasks;
     } catch (e) {

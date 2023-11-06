@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
 import { TaskService } from './task.service';
 import type { Task } from './task.entity';
-import type { CreateTaskDto, UpdateTaskDto } from './dto';
+import type { GetManyTasksQueryDto, CreateTaskDto, UpdateTaskDto } from './dto';
 
 @Controller('/tasks')
 export class TaskController {
@@ -13,8 +23,11 @@ export class TaskController {
   }
 
   @Get('/')
-  findAll(): Promise<Task[]> {
-    return this.service.getAll();
+  findAll(@Query() query: GetManyTasksQueryDto): Promise<Task[]> {
+    const { name, isCompleted, boardId } = query;
+    const payload = { name, isCompleted, board: { id: boardId } };
+
+    return this.service.getAllBy(payload);
   }
 
   @Get('/:id')

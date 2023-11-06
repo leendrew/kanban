@@ -4,4 +4,7 @@ import type { CreateTaskPayload } from '../task.types';
 export class CreateTaskDto implements CreateTaskPayload {
   @IsNotEmpty()
   name: string;
+
+  @IsNotEmpty()
+  boardId: number;
 }
