@@ -46,7 +46,11 @@ export class BoardService {
 
   async getOneBy(payload: GetBoardByPayload): Promise<Board | null> {
     try {
-      const board = await this.repository.findOneBy(payload);
+      const board = await this.repository.findOne({
+        where: payload,
+        relations: ['user'],
+        order: { tasks: { index: 'asc' } },
+      });
 
       return board;
     } catch (e) {
@@ -57,7 +61,10 @@ export class BoardService {
 
   async getAllBy(payload: GetManyBoardsPayload): Promise<Board[]> {
     try {
-      const boards = await this.repository.findBy(payload);
+      const boards = await this.repository.find({
+        where: payload,
+        order: { index: 'asc', tasks: { index: 'asc' } },
+      });
 
       return boards;
     } catch (e) {
@@ -95,8 +102,8 @@ export class BoardService {
         user = dbUser;
       }
 
-      await this.repository.update(id, { name, user });
-      const updatedBoard = await this.repository.findOneBy({ id });
+      await this.repository.update(id, { name, index, user });
+      const updatedBoard = await this.getOneBy({ id });
 
       return updatedBoard as Board;
     } catch (e) {
@@ -107,7 +114,7 @@ export class BoardService {
 
   async deleteOne(id: Board['id']): Promise<Board> {
     try {
-      const deletedBoard = await this.repository.findOneBy({ id });
+      const deletedBoard = await this.getOneBy({ id });
       if (!deletedBoard) {
         throw new Error("Board doesn't exist");
       }

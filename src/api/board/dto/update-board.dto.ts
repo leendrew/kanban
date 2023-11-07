@@ -10,4 +10,10 @@ export class UpdateBoardDto implements UpdateBoardPayload {
 
   @IsOptional()
   password?: string;
+
+  @IsOptional()
+  userId?: number;
+
+  @IsOptional()
+  index?: number;
 }

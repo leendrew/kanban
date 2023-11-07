@@ -7,4 +7,10 @@ export class UpdateTaskDto implements UpdateTaskPayload {
 
   @IsOptional()
   isCompleted?: boolean;
+
+  @IsOptional()
+  boardId?: number;
+
+  @IsOptional()
+  index?: number;
 }

@@ -13,6 +13,6 @@ export class User extends EntityBase {
   @Column({ type: 'text', nullable: false, select: false })
   password: string;
 
-  @OneToMany(() => Board, (b) => b.user)
+  @OneToMany(() => Board, (b) => b.user, { eager: true })
   boards: Board[];
 }

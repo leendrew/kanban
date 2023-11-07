@@ -46,7 +46,7 @@ export class TaskService {
 
   async getOneBy(payload: GetTaskByPayload): Promise<Task | null> {
     try {
-      const task = await this.repository.findOneBy({ ...payload });
+      const task = await this.repository.findOneBy(payload);
 
       return task;
     } catch (e) {
@@ -57,7 +57,10 @@ export class TaskService {
 
   async getAllBy(payload: GetManyTasksPayload): Promise<Task[]> {
     try {
-      const tasks = await this.repository.findBy(payload);
+      const tasks = await this.repository.find({
+        where: payload,
+        order: { index: 'asc' },
+      });
 
       return tasks;
     } catch (e) {
@@ -96,7 +99,7 @@ export class TaskService {
       }
 
       await this.repository.update(id, { name, isCompleted, index, board });
-      const updatedTask = await this.repository.findOneBy({ id });
+      const updatedTask = await this.getOneBy({ id });
 
       return updatedTask as Task;
     } catch (e) {
@@ -107,7 +110,7 @@ export class TaskService {
 
   async deleteOne(id: Task['id']): Promise<Task> {
     try {
-      const deletedTask = await this.repository.findOneBy({ id });
+      const deletedTask = await this.getOneBy({ id });
       if (!deletedTask) {
         throw new Error("Task doesn't exist");
       }

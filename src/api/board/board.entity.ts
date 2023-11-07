@@ -11,10 +11,10 @@ export class Board extends EntityBase {
   @Column({ type: 'smallint', nullable: false })
   index: number;
 
-  @ManyToOne(() => User, (u) => u.boards, { cascade: ['update', 'remove'], eager: true })
+  @ManyToOne(() => User, (u) => u.boards, { cascade: ['update', 'remove'] })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @OneToMany(() => Task, (t) => t.board)
+  @OneToMany(() => Task, (t) => t.board, { eager: true })
   tasks: Task[];
 }

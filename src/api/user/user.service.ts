@@ -26,7 +26,10 @@ export class UserService {
 
   async getOneBy(payload: GetUserByPayload): Promise<User | null> {
     try {
-      const user = await this.repository.findOneBy(payload);
+      const user = await this.repository.findOne({
+        where: payload,
+        order: { boards: { index: 'asc' } },
+      });
 
       return user;
     } catch (e) {
@@ -37,7 +40,9 @@ export class UserService {
 
   async getAll(): Promise<User[]> {
     try {
-      const users = await this.repository.find();
+      const users = await this.repository.find({
+        order: { boards: { index: 'asc', tasks: { index: 'asc' } } },
+      });
 
       return users;
     } catch (e) {
@@ -52,7 +57,7 @@ export class UserService {
         payload.password = await this.hashService.hash(payload.password);
       }
       await this.repository.update(id, payload);
-      const updatedUser = await this.repository.findOneBy({ id });
+      const updatedUser = await this.getOneBy({ id });
 
       return updatedUser as User;
     } catch (e) {
@@ -63,7 +68,7 @@ export class UserService {
 
   async deleteOne(id: User['id']): Promise<User> {
     try {
-      const deletedUser = await this.repository.findOneBy({ id });
+      const deletedUser = await this.getOneBy({ id });
       if (!deletedUser) {
         throw new Error("User doesn't exist");
       }
