@@ -26,7 +26,15 @@ export class BoardService {
         throw new Error("User doesn't exist");
       }
 
-      const board = this.repository.create({ name, user });
+      let index: number = 0;
+
+      const existedBoards = await this.getAllBy({ user: { id: user.id } });
+      const boardsLength = existedBoards.length;
+      if (boardsLength) {
+        index = boardsLength;
+      }
+
+      const board = this.repository.create({ name, user, index });
       const createdBoard = await this.repository.save(board);
 
       return createdBoard;
@@ -59,8 +67,24 @@ export class BoardService {
   }
 
   async updateOne(id: Board['id'], payload: UpdateBoardPayload): Promise<Board> {
+    const { name, userId, index } = payload;
     try {
-      const { name, userId } = payload;
+      if (index && index < 0) {
+        throw new Error('Board index cannot be negative');
+      }
+
+      const currentBoard = await this.getOneBy({ id });
+      if (!currentBoard) {
+        throw new Error("Board doesn't exist");
+      }
+
+      if (index) {
+        const boards = await this.getAllBy({ user: { id: currentBoard.user.id } });
+        if (index > boards.length - 1) {
+          throw new Error('Board index cannot be greater, than boards length');
+        }
+      }
+
       let user: User | undefined;
 
       if (userId) {
