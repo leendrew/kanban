@@ -13,6 +13,6 @@ export type GetManyTasksPayload = Partial<Omit<TaskWithoutMeta, 'board'>> & {
 
 export type GetTaskByPayload = Pick<Task, 'id'> | Pick<Task, 'name'>;
 
-type TaskWithoutMeta = Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'board'>;
+type TaskWithoutMeta = Omit<Task, 'id' | 'createdAt' | 'updatedAt'>;
 
-export type UpdateTaskPayload = Partial<TaskWithoutMeta>;
+export type UpdateTaskPayload = Partial<Omit<TaskWithoutMeta, 'board'>> & BoardFk;

@@ -10,6 +10,9 @@ export class Task extends EntityBase {
   @Column({ name: 'is_completed', type: 'boolean', nullable: false, default: false })
   isCompleted: boolean;
 
+  @Column({ type: 'smallint', nullable: false })
+  index: number;
+
   @ManyToOne(() => Board, (b) => b.tasks, { cascade: ['update', 'remove'] })
   @JoinColumn({ name: 'board_id' })
   board: Board;
