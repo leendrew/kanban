@@ -29,6 +29,8 @@ export class SeederService {
     await this.userRepository.query('truncate table users cascade');
     await this.userRepository.query('alter sequence users_id_seq restart with 1');
 
+    const users: User[] = [];
+
     for (let i = 1; i <= USERS_COUNT; i++) {
       const user = new User();
 
@@ -36,23 +38,39 @@ export class SeederService {
       user.login = `user_${i}`;
       user.password = 'pass';
 
-      await this.userRepository.save(user);
+      users.push(user);
     }
+
+    await this.userRepository.save(users);
   }
 
   private async seedBoards(): Promise<void> {
     await this.boardRepository.query('truncate table boards cascade');
     await this.userRepository.query('alter sequence boards_id_seq restart with 1');
 
+    const boards: Board[] = [];
+
     for (let i = 1; i <= BOARDS_COUNT; i++) {
       const board = new Board();
 
       board.name = `board_${i}`;
+      board.index = i;
       board.user = await this.userRepository.findOneByOrFail({
         id: randomIntTo(1, USERS_COUNT),
       });
 
-      await this.boardRepository.save(board);
+      boards.push(board);
+    }
+
+    await this.boardRepository.save(boards);
+
+    // Reindexing
+    for (let i = 1; i <= USERS_COUNT; i++) {
+      const boards = await this.boardRepository.findBy({ user: { id: i } });
+
+      for (let j = 0; j < boards.length; j++) {
+        await this.boardRepository.update(boards[j].id, { index: j });
+      }
     }
   }
 
@@ -60,16 +78,30 @@ export class SeederService {
     await this.taskRepository.query('truncate table tasks cascade');
     await this.userRepository.query('alter sequence tasks_id_seq restart with 1');
 
+    const tasks: Task[] = [];
+
     for (let i = 1; i <= TASKS_COUNT; i++) {
       const task = new Task();
 
       task.name = faker.lorem.words({ min: 1, max: 5 });
       task.isCompleted = !!faker.number.int({ min: 0, max: 1 });
+      task.index = i;
       task.board = await this.boardRepository.findOneByOrFail({
         id: randomIntTo(1, BOARDS_COUNT),
       });
 
-      await this.taskRepository.save(task);
+      tasks.push(task);
+    }
+
+    await this.taskRepository.save(tasks);
+
+    // Reindexing
+    for (let i = 1; i <= BOARDS_COUNT; i++) {
+      const tasks = await this.taskRepository.findBy({ board: { id: i } });
+
+      for (let j = 0; j < tasks.length; j++) {
+        await this.taskRepository.update(tasks[j].id, { index: j });
+      }
     }
   }
 
