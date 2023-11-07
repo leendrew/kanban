@@ -41,7 +41,7 @@ export class UserService {
   async getAll(): Promise<User[]> {
     try {
       const users = await this.repository.find({
-        order: { boards: { index: 'asc', tasks: { index: 'asc' } } },
+        order: { id: 'asc', boards: { index: 'asc', tasks: { index: 'asc' } } },
       });
 
       return users;
