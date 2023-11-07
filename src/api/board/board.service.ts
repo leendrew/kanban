@@ -103,7 +103,7 @@ export class BoardService {
       }
 
       await this.repository.update(id, { name, index, user });
-      const updatedBoard = await this.getOneBy({ id });
+      const updatedBoard = await this.repository.findOneBy({ id });
 
       return updatedBoard as Board;
     } catch (e) {
