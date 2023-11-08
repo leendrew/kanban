@@ -37,8 +37,8 @@ make down-dev
 ### prod
 
 ```bash
-cp .env.example .env
-docker-compose up --build
+cp .env.example .env.prod
+docker-compose up app --build
 ```
 
 or using make
