@@ -1,4 +1,5 @@
 # dev
+# db local on docker
 
 # up
 up-dev: up-db-dev up-app-dev
@@ -22,30 +23,35 @@ down-db-dev:
 	docker-compose down db
 
 # prod
+# db external on render.com
 
 # up
-up-prod: up-db-prod up-app-prod
-
-up-db-prod:
-	docker-compose up db -d
+up-prod: up-app-prod
 
 up-app-prod:
 	docker-compose up app -d
 
 # stop
-stop-prod: stop-db-prod stop-app-prod
-
-stop-db-prod:
-	docker-compose stop db
+stop-prod: stop-app-prod
 
 stop-app-prod:
 	docker-compose stop app
 
 # down
-down-prod: down-db-prod down-app-prod
-
-down-db-prod:
-	docker-compose down db
+down-prod: down-app-prod
 
 down-app-prod:
 	docker-compose down app
+
+# db seed
+
+db-seed:
+	yarn db:seed
+
+# prod db migrations
+
+migrations-generate:
+	npx ts-node ./node_modules/typeorm/cli migration:generate ./src/database/migrations/* -d ./src/typeorm.config.ts
+
+migrations-run:
+	npx ts-node ./node_modules/typeorm/cli migration:run -d ./src/typeorm.config.ts
