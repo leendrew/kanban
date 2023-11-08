@@ -2,6 +2,10 @@
 
 [Client Repo](https://github.com/leendrew/kanban-client-react)
 
+[Deployed](https://kanban-server-nest.onrender.com)
+
+[Swagger Docs](https://kanban-server-nest.onrender.com/docs)
+
 ## Stack
 
 - Nest.js
