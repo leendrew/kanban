@@ -34,6 +34,18 @@ to shutdown
 make down-dev
 ```
 
+### db seed
+
+```bash
+yarn db:seed
+```
+
+or using make
+
+```bash
+make db-seed
+```
+
 ### prod
 
 ```bash
