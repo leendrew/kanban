@@ -28,7 +28,7 @@ export class UserService {
     try {
       const user = await this.repository.findOne({
         where: payload,
-        order: { boards: { index: 'asc' } },
+        order: { id: 'asc', boards: { index: 'asc', tasks: { index: 'asc' } } },
       });
 
       return user;
