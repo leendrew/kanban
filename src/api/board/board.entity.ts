@@ -11,7 +11,7 @@ export class Board extends EntityBase {
   @Column({ type: 'smallint', nullable: false })
   index: number;
 
-  @ManyToOne(() => User, (u) => u.boards, { cascade: ['update', 'remove'] })
+  @ManyToOne(() => User, (u) => u.boards, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

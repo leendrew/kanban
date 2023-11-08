@@ -13,7 +13,7 @@ export class Task extends EntityBase {
   @Column({ type: 'smallint', nullable: false })
   index: number;
 
-  @ManyToOne(() => Board, (b) => b.tasks, { cascade: ['update', 'remove'] })
+  @ManyToOne(() => Board, (b) => b.tasks, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
   @JoinColumn({ name: 'board_id' })
   board: Board;
 }
