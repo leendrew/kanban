@@ -94,8 +94,6 @@ export class AuthService {
   }
 
   validate(payload: TokenPayload): Promise<User | null> {
-    console.log('validate payload', payload);
-
     return this.userService.getOneBy({ id: payload.sub });
   }
 
