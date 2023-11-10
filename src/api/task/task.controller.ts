@@ -8,11 +8,14 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import type { Task } from './task.entity';
 import type { GetManyTasksQueryDto, CreateTaskDto, UpdateTaskDto } from './dto';
+import { JwtGuard } from '../auth/jwt';
 
+@UseGuards(JwtGuard)
 @Controller('/tasks')
 export class TaskController {
   constructor(private readonly service: TaskService) {}

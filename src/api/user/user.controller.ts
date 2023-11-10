@@ -8,11 +8,14 @@ import {
   Param,
   Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import type { User } from './user.entity';
 import type { GetUserQueryDto, CreateUserDto, UpdateUserDto } from './dto';
+import { JwtGuard } from '../auth/jwt';
 
+@UseGuards(JwtGuard)
 @Controller('/users')
 export class UserController {
   constructor(private readonly service: UserService) {}

@@ -8,11 +8,14 @@ import {
   Param,
   Query,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { BoardService } from './board.service';
 import type { Board } from './board.entity';
 import type { GetManyBoardsQueryDto, CreateBoardDto, UpdateBoardDto } from './dto';
+import { JwtGuard } from '../auth/jwt';
 
+@UseGuards(JwtGuard)
 @Controller('/boards')
 export class BoardController {
   constructor(private readonly service: BoardService) {}
