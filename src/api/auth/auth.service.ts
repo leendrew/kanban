@@ -46,7 +46,7 @@ export class AuthService {
   async login(payload: LoginPayload): Promise<TokenResponse> {
     const { login, password } = payload;
 
-    const user = await this.userService.getOneBy({ login });
+    const user = await this.userService.getOneByWithPassword({ login });
     if (!user) {
       throw new Error("User doesn't exist");
     }

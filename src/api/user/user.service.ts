@@ -38,6 +38,24 @@ export class UserService {
     }
   }
 
+  async getOneByWithPassword(payload: GetUserByPayload): Promise<User | null> {
+    try {
+      const user = await this.repository.findOne({
+        where: payload,
+        select: {
+          id: true,
+          login: true,
+          password: true,
+        },
+      });
+
+      return user;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+
   async getAll(): Promise<User[]> {
     try {
       const users = await this.repository.find({
