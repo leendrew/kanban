@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
+import { HashService } from './common';
 import { User } from './api/user/user.entity';
 import { Board } from './api/board/board.entity';
 import { Task } from './api/task/task.entity';
@@ -23,6 +24,7 @@ export class SeederService {
     private readonly boardRepository: Repository<Board>,
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    private readonly hashService: HashService,
   ) {}
 
   private async seedUsers(): Promise<void> {
@@ -36,7 +38,7 @@ export class SeederService {
 
       user.name = faker.person.firstName();
       user.login = `user_${i}`;
-      user.password = 'pass';
+      user.password = await this.hashService.hash('pass');
 
       users.push(user);
     }
