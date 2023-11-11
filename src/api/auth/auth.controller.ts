@@ -1,8 +1,7 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import type { LoginDto, RefreshDto } from './dto';
+import type { RegisterDto, LoginDto, RefreshDto } from './dto';
 import type { TokenResponse } from './jwt';
-import type { CreateUserDto } from '../user/dto';
 import type { User } from '../user/user.entity';
 
 @Controller('/auth')
@@ -10,7 +9,7 @@ export class AuthController {
   constructor(private readonly service: AuthService) {}
 
   @Post('/register')
-  register(@Body() dto: CreateUserDto): Promise<User> {
+  register(@Body() dto: RegisterDto): Promise<User> {
     return this.service.register(dto);
   }
 

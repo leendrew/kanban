@@ -27,7 +27,11 @@ export class AuthService {
 
   async register(dto: RegisterPayload): Promise<User> {
     try {
-      const { name, login, password } = dto;
+      const { name, login, password, confirmPassword } = dto;
+      if (password !== confirmPassword) {
+        throw new Error('Passwords must match');
+      }
+
       const hashedPassword = await this.hashService.hash(password);
 
       const createdUser = await this.userService.createOne({
