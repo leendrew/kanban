@@ -9,3 +9,5 @@ export type LoginPayload = Pick<User, 'login' | 'password'>;
 export interface RefreshPayload {
   refreshToken: TokenResponse['refresh'];
 }
+
+export type AuthResponse = { user: User; tokens: TokenResponse };

@@ -4,7 +4,7 @@ import { ConfigService } from '../../config';
 import { HashService } from '../../common';
 import { UserService } from '../user/user.service';
 import type { User } from '../user/user.entity';
-import type { RegisterPayload, LoginPayload, RefreshPayload } from './auth.types';
+import type { RegisterPayload, LoginPayload, RefreshPayload, AuthResponse } from './auth.types';
 import type {
   TokenPayload,
   TokenData,
@@ -25,7 +25,7 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async register(dto: RegisterPayload): Promise<User> {
+  async register(dto: RegisterPayload): Promise<AuthResponse> {
     try {
       const { name, login, password, confirmPassword } = dto;
       if (password !== confirmPassword) {
@@ -40,14 +40,16 @@ export class AuthService {
         password: hashedPassword,
       });
 
-      return createdUser;
+      const tokens = await this.createTokenPairs({ id: createdUser.id, login: createdUser.login });
+
+      return { user: createdUser, tokens };
     } catch (e) {
       console.error(e);
       throw e;
     }
   }
 
-  async login(payload: LoginPayload): Promise<TokenResponse> {
+  async login(payload: LoginPayload): Promise<AuthResponse> {
     const { login, password } = payload;
 
     const user = await this.userService.getOneByWithPassword({ login });
@@ -60,7 +62,9 @@ export class AuthService {
       throw new Error('Wrong password');
     }
 
-    return this.createTokenPairs({ id: user.id, login: user.login });
+    const tokens = await this.createTokenPairs({ id: user.id, login: user.login });
+
+    return { user, tokens };
   }
 
   createToken<T>(payload: CreateTokenPayload<T>): Promise<Token> {
