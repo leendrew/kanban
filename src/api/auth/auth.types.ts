@@ -10,4 +10,7 @@ export interface RefreshPayload {
   refreshToken: TokenResponse['refresh'];
 }
 
-export type AuthResponse = { user: Omit<UserWithoutBoards, 'password'>; tokens: TokenResponse };
+export type AuthResponse = {
+  user: Omit<UserWithoutBoards, 'password' | 'createdAt' | 'updatedAt'>;
+  tokens: TokenResponse;
+};

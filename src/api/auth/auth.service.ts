@@ -40,9 +40,10 @@ export class AuthService {
         password: hashedPassword,
       });
 
+      const user = { id: createdUser.id, name: createdUser.name, login: createdUser.login };
       const tokens = await this.createTokenPairs({ id: createdUser.id, login: createdUser.login });
 
-      return { user: createdUser, tokens };
+      return { user, tokens };
     } catch (e) {
       console.error(e);
       throw e;
