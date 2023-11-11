@@ -62,6 +62,8 @@ export class AuthService {
       throw new Error('Wrong password');
     }
 
+    delete (user as Partial<User>).password;
+
     const tokens = await this.createTokenPairs({ id: user.id, login: user.login });
 
     return { user, tokens };

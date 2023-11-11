@@ -1,4 +1,4 @@
-import type { CreateUserPayload } from '../user/user.types';
+import type { CreateUserPayload, UserWithoutBoards } from '../user/user.types';
 import type { User } from '../user/user.entity';
 import type { TokenResponse } from './jwt';
 
@@ -10,4 +10,4 @@ export interface RefreshPayload {
   refreshToken: TokenResponse['refresh'];
 }
 
-export type AuthResponse = { user: User; tokens: TokenResponse };
+export type AuthResponse = { user: Omit<UserWithoutBoards, 'password'>; tokens: TokenResponse };

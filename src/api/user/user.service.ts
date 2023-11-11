@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 import { User } from './user.entity';
-import type { CreateUserPayload, GetUserByPayload, UpdateUserPayload } from './user.types';
+import type {
+  UserWithoutBoards,
+  CreateUserPayload,
+  GetUserByPayload,
+  UpdateUserPayload,
+} from './user.types';
 import { HashService } from '../../common';
 
 @Injectable()
@@ -38,16 +43,14 @@ export class UserService {
     }
   }
 
-  async getOneByWithPassword(payload: GetUserByPayload): Promise<User | null> {
+  async getOneByWithPassword(payload: GetUserByPayload): Promise<UserWithoutBoards | null> {
     try {
-      const user = await this.repository.findOne({
-        where: payload,
-        select: {
-          id: true,
-          login: true,
-          password: true,
-        },
-      });
+      const user = await this.repository
+        .createQueryBuilder('u')
+        .select(['u.id', 'u.name', 'u.login'])
+        .addSelect('u.password')
+        .where(payload)
+        .getOne();
 
       return user;
     } catch (e) {
