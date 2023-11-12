@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '../../config';
 import { HashService } from '../../common';
 import { UserService } from '../user/user.service';
-import type { User } from '../user/user.entity';
+import type { UserModel } from '../user/user.types';
 import type { RegisterPayload, LoginPayload, RefreshPayload, AuthResponse } from './auth.types';
 import type {
   TokenPayload,
@@ -63,7 +63,7 @@ export class AuthService {
       throw new Error('Wrong password');
     }
 
-    delete (user as Partial<User>).password;
+    delete (user as Partial<UserModel>).password;
 
     const tokens = await this.createTokenPairs({ id: user.id, login: user.login });
 
@@ -104,7 +104,7 @@ export class AuthService {
     return { access, refresh };
   }
 
-  validate(payload: TokenPayload): Promise<User | null> {
+  validate(payload: TokenPayload): Promise<UserModel | null> {
     return this.userService.getOneBy({ id: payload.sub });
   }
 

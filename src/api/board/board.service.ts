@@ -3,13 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 import { Board } from './board.entity';
 import type {
+  BoardModel,
   CreateBoardPayload,
   GetManyBoardsPayload,
   GetBoardByPayload,
   UpdateBoardPayload,
 } from './board.types';
 import { UserService } from '../user/user.service';
-import type { User } from '../user/user.entity';
+import type { UserModel } from '../user/user.types';
 
 @Injectable()
 export class BoardService {
@@ -18,7 +19,7 @@ export class BoardService {
     private readonly userService: UserService,
   ) {}
 
-  async createOne(payload: CreateBoardPayload): Promise<Board> {
+  async createOne(payload: CreateBoardPayload): Promise<BoardModel> {
     const { name, userId } = payload;
     try {
       const user = await this.userService.getOneBy({ id: userId });
@@ -44,7 +45,7 @@ export class BoardService {
     }
   }
 
-  async getOneBy(payload: GetBoardByPayload): Promise<Board | null> {
+  async getOneBy(payload: GetBoardByPayload): Promise<BoardModel | null> {
     try {
       const board = await this.repository.findOne({
         where: payload,
@@ -59,7 +60,7 @@ export class BoardService {
     }
   }
 
-  async getAllBy(payload: GetManyBoardsPayload): Promise<Board[]> {
+  async getAllBy(payload: GetManyBoardsPayload): Promise<BoardModel[]> {
     try {
       const boards = await this.repository.find({
         where: payload,
@@ -73,7 +74,7 @@ export class BoardService {
     }
   }
 
-  async updateOne(id: Board['id'], payload: UpdateBoardPayload): Promise<Board> {
+  async updateOne(id: BoardModel['id'], payload: UpdateBoardPayload): Promise<BoardModel> {
     const { name, userId, index } = payload;
     try {
       if (index && index < 0) {
@@ -92,7 +93,7 @@ export class BoardService {
         }
       }
 
-      let user: User | undefined;
+      let user: UserModel | undefined;
 
       if (userId) {
         const dbUser = await this.userService.getOneBy({ id: userId });
@@ -105,14 +106,14 @@ export class BoardService {
       await this.repository.update(id, { name, index, user });
       const updatedBoard = await this.repository.findOneBy({ id });
 
-      return updatedBoard as Board;
+      return updatedBoard as BoardModel;
     } catch (e) {
       console.error(e);
       throw e;
     }
   }
 
-  async deleteOne(id: Board['id']): Promise<Board> {
+  async deleteOne(id: BoardModel['id']): Promise<BoardModel> {
     try {
       const deletedBoard = await this.getOneBy({ id });
       if (!deletedBoard) {

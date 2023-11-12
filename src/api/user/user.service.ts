@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 import { User } from './user.entity';
 import type {
-  UserWithoutBoards,
+  UserModel,
   CreateUserPayload,
   GetUserByPayload,
+  UserWithoutRelations,
   UpdateUserPayload,
 } from './user.types';
 import { HashService } from '../../common';
@@ -17,7 +18,7 @@ export class UserService {
     private readonly hashService: HashService,
   ) {}
 
-  async createOne(payload: CreateUserPayload): Promise<User> {
+  async createOne(payload: CreateUserPayload): Promise<UserModel> {
     try {
       const user = this.repository.create(payload);
       const createdUser = await this.repository.save(user);
@@ -29,7 +30,7 @@ export class UserService {
     }
   }
 
-  async getOneBy(payload: GetUserByPayload): Promise<User | null> {
+  async getOneBy(payload: GetUserByPayload): Promise<UserModel | null> {
     try {
       const user = await this.repository.findOne({
         where: payload,
@@ -43,7 +44,7 @@ export class UserService {
     }
   }
 
-  async getOneByWithPassword(payload: GetUserByPayload): Promise<UserWithoutBoards | null> {
+  async getOneByWithPassword(payload: GetUserByPayload): Promise<UserWithoutRelations | null> {
     try {
       const user = await this.repository
         .createQueryBuilder('u')
@@ -59,7 +60,7 @@ export class UserService {
     }
   }
 
-  async getAll(): Promise<User[]> {
+  async getAll(): Promise<UserModel[]> {
     try {
       const users = await this.repository.find({
         order: { id: 'asc', boards: { index: 'asc', tasks: { index: 'asc' } } },
@@ -72,7 +73,7 @@ export class UserService {
     }
   }
 
-  async updateOne(id: User['id'], payload: UpdateUserPayload): Promise<User> {
+  async updateOne(id: User['id'], payload: UpdateUserPayload): Promise<UserModel> {
     try {
       if (payload.password) {
         payload.password = await this.hashService.hash(payload.password);
@@ -87,7 +88,7 @@ export class UserService {
     }
   }
 
-  async deleteOne(id: User['id']): Promise<User> {
+  async deleteOne(id: User['id']): Promise<UserModel> {
     try {
       const deletedUser = await this.getOneBy({ id });
       if (!deletedUser) {

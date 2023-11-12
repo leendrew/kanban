@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import type { User } from './user.entity';
+import type { UserModel } from './user.types';
 import type { GetUserQueryDto, CreateUserDto, UpdateUserDto } from './dto';
 import { JwtGuard } from '../auth/jwt';
 
@@ -21,12 +21,12 @@ export class UserController {
   constructor(private readonly service: UserService) {}
 
   @Post('/')
-  create(@Body() dto: CreateUserDto): Promise<User> {
+  create(@Body() dto: CreateUserDto): Promise<UserModel> {
     return this.service.createOne(dto);
   }
 
   @Get('/')
-  findAll(@Query() query: GetUserQueryDto): Promise<User | null | User[]> {
+  findAll(@Query() query: GetUserQueryDto): Promise<UserModel | null | UserModel[]> {
     const { login } = query;
     if (login) {
       return this.service.getOneBy({ login });
@@ -35,7 +35,7 @@ export class UserController {
   }
 
   @Get('/:id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<User | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<UserModel | null> {
     return this.service.getOneBy({ id });
   }
 

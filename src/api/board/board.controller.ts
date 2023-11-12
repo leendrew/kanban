@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BoardService } from './board.service';
-import type { Board } from './board.entity';
+import type { BoardModel } from './board.types';
 import type { GetManyBoardsQueryDto, CreateBoardDto, UpdateBoardDto } from './dto';
 import { JwtGuard } from '../auth/jwt';
 
@@ -21,12 +21,12 @@ export class BoardController {
   constructor(private readonly service: BoardService) {}
 
   @Post('/')
-  create(@Body() dto: CreateBoardDto): Promise<Board> {
+  create(@Body() dto: CreateBoardDto): Promise<BoardModel> {
     return this.service.createOne(dto);
   }
 
   @Get('/')
-  findAll(@Query() query: GetManyBoardsQueryDto): Promise<Board | null | Board[]> {
+  findAll(@Query() query: GetManyBoardsQueryDto): Promise<BoardModel | null | BoardModel[]> {
     const { name, userId } = query;
     const payload = { name, user: { id: userId } };
 
@@ -34,7 +34,7 @@ export class BoardController {
   }
 
   @Get('/:id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Board | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<BoardModel | null> {
     return this.service.getOneBy({ id });
   }
 

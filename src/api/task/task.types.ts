@@ -1,18 +1,20 @@
 import type { Task } from './task.entity';
-import type { Board } from '../board/board.entity';
+import type { BoardModel } from '../board/board.types';
 
-type BoardFk = { boardId: Board['id'] };
+export type TaskModel = Omit<Task, 'createdAt' | 'updatedAt'>;
 
-export type CreateTaskPayload = Pick<Task, 'name'> & BoardFk;
+type BoardFk = { boardId: BoardModel['id'] };
 
-export type GetManyTasksQuery = Partial<Pick<Task, 'name' | 'isCompleted'> & BoardFk>;
+export type CreateTaskPayload = Pick<TaskModel, 'name'> & BoardFk;
+
+export type GetManyTasksQuery = Partial<Pick<TaskModel, 'name' | 'isCompleted'> & BoardFk>;
 
 export type GetManyTasksPayload = Partial<Omit<TaskWithoutMeta, 'board'>> & {
-  board?: Partial<Task['board']>;
+  board?: Partial<TaskModel['board']>;
 };
 
-export type GetTaskByPayload = Pick<Task, 'id'> | Pick<Task, 'name'>;
+export type GetTaskByPayload = Pick<TaskModel, 'id'> | Pick<TaskModel, 'name'>;
 
-type TaskWithoutMeta = Omit<Task, 'id' | 'createdAt' | 'updatedAt'>;
+type TaskWithoutMeta = Omit<TaskModel, 'id' | 'createdAt' | 'updatedAt'>;
 
 export type UpdateTaskPayload = Partial<Omit<TaskWithoutMeta, 'board'> & BoardFk>;

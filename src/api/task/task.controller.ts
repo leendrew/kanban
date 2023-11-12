@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
-import type { Task } from './task.entity';
+import type { TaskModel } from './task.types';
 import type { GetManyTasksQueryDto, CreateTaskDto, UpdateTaskDto } from './dto';
 import { JwtGuard } from '../auth/jwt';
 
@@ -21,12 +21,12 @@ export class TaskController {
   constructor(private readonly service: TaskService) {}
 
   @Post('/')
-  create(@Body() dto: CreateTaskDto): Promise<Task> {
+  create(@Body() dto: CreateTaskDto): Promise<TaskModel> {
     return this.service.createOne(dto);
   }
 
   @Get('/')
-  findAll(@Query() query: GetManyTasksQueryDto): Promise<Task[]> {
+  findAll(@Query() query: GetManyTasksQueryDto): Promise<TaskModel[]> {
     const { name, isCompleted, boardId } = query;
     const payload = { name, isCompleted, board: { id: boardId } };
 
@@ -34,7 +34,7 @@ export class TaskController {
   }
 
   @Get('/:id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Task | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<TaskModel | null> {
     return this.service.getOneBy({ id });
   }
 

@@ -1,16 +1,15 @@
-import type { CreateUserPayload, UserWithoutBoards } from '../user/user.types';
-import type { User } from '../user/user.entity';
+import type { UserModel, CreateUserPayload, UserWithoutRelations } from '../user/user.types';
 import type { TokenResponse } from './jwt';
 
-export type RegisterPayload = CreateUserPayload & { confirmPassword: User['password'] };
+export type RegisterPayload = CreateUserPayload & { confirmPassword: UserModel['password'] };
 
-export type LoginPayload = Pick<User, 'login' | 'password'>;
+export type LoginPayload = Pick<UserModel, 'login' | 'password'>;
 
 export interface RefreshPayload {
   refreshToken: TokenResponse['refresh'];
 }
 
 export type AuthResponse = {
-  user: Omit<UserWithoutBoards, 'password' | 'createdAt' | 'updatedAt'>;
+  user: Omit<UserWithoutRelations, 'password'>;
   tokens: TokenResponse;
 };

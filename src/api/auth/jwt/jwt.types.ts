@@ -1,8 +1,8 @@
-import type { User } from '../../user/user.entity';
+import type { UserModel } from '../../user/user.types';
 
 export interface TokenData {
-  sub: User['id'];
-  login: User['login'];
+  sub: UserModel['id'];
+  login: UserModel['login'];
 }
 
 export interface TokenTime {
@@ -14,11 +14,11 @@ export interface TokenTime {
 
 export type TokenPayload = TokenData & TokenTime;
 
-export type CreateTokenPayload<T> = Pick<User, 'id'> & { ttl: number; payload?: T };
+export type CreateTokenPayload<T> = Pick<UserModel, 'id'> & { ttl: number; payload?: T };
 
-export type CreateAccessTokenPayload = Pick<User, 'login'>;
+export type CreateAccessTokenPayload = Pick<UserModel, 'login'>;
 
-export type CreateTokenPairsPayload = Pick<User, 'id' | 'login'>;
+export type CreateTokenPairsPayload = Pick<UserModel, 'id' | 'login'>;
 
 export type VerifyAccessTokenData = Pick<TokenData, 'sub'>;
 

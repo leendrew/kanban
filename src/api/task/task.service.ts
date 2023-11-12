@@ -3,12 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import type { Repository } from 'typeorm';
 import { Task } from './task.entity';
 import type {
+  TaskModel,
   CreateTaskPayload,
   GetManyTasksPayload,
   GetTaskByPayload,
   UpdateTaskPayload,
 } from './task.types';
-import type { Board } from '../board/board.entity';
+import type { BoardModel } from '../board/board.types';
 import { BoardService } from '../board/board.service';
 
 @Injectable()
@@ -18,7 +19,7 @@ export class TaskService {
     private readonly boardService: BoardService,
   ) {}
 
-  async createOne(payload: CreateTaskPayload): Promise<Task> {
+  async createOne(payload: CreateTaskPayload): Promise<TaskModel> {
     const { name, boardId } = payload;
     try {
       const board = await this.boardService.getOneBy({ id: boardId });
@@ -44,7 +45,7 @@ export class TaskService {
     }
   }
 
-  async getOneBy(payload: GetTaskByPayload): Promise<Task | null> {
+  async getOneBy(payload: GetTaskByPayload): Promise<TaskModel | null> {
     try {
       const task = await this.repository.findOneBy(payload);
 
@@ -55,7 +56,7 @@ export class TaskService {
     }
   }
 
-  async getAllBy(payload: GetManyTasksPayload): Promise<Task[]> {
+  async getAllBy(payload: GetManyTasksPayload): Promise<TaskModel[]> {
     try {
       const tasks = await this.repository.find({
         where: payload,
@@ -69,7 +70,7 @@ export class TaskService {
     }
   }
 
-  async updateOne(id: Task['id'], payload: UpdateTaskPayload): Promise<Task> {
+  async updateOne(id: Task['id'], payload: UpdateTaskPayload): Promise<TaskModel> {
     const { name, isCompleted, index, boardId } = payload;
     try {
       if (index && index < 0) {
@@ -88,7 +89,7 @@ export class TaskService {
         }
       }
 
-      let board: Board | undefined;
+      let board: BoardModel | undefined;
 
       if (boardId) {
         const dbBoard = await this.boardService.getOneBy({ id: boardId });
@@ -101,14 +102,14 @@ export class TaskService {
       await this.repository.update(id, { name, isCompleted, index, board });
       const updatedTask = await this.getOneBy({ id });
 
-      return updatedTask as Task;
+      return updatedTask as TaskModel;
     } catch (e) {
       console.error(e);
       throw e;
     }
   }
 
-  async deleteOne(id: Task['id']): Promise<Task> {
+  async deleteOne(id: TaskModel['id']): Promise<TaskModel> {
     try {
       const deletedTask = await this.getOneBy({ id });
       if (!deletedTask) {

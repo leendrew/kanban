@@ -1,13 +1,13 @@
 import type { User } from './user.entity';
 
-export type UserWithoutBoards = Omit<User, 'boards'>;
+export type UserModel = Omit<User, 'createdAt' | 'updatedAt'>;
 
-export type CreateUserPayload = Pick<User, 'login' | 'name' | 'password'>;
+export type UserWithoutRelations = Omit<UserModel, 'boards'>;
 
-export type GetUserQuery = Partial<Pick<User, 'login'>>;
+export type CreateUserPayload = Pick<UserModel, 'login' | 'name' | 'password'>;
 
-export type GetUserByPayload = Pick<User, 'id'> | Pick<User, 'login'>;
+export type GetUserQuery = Partial<Pick<UserModel, 'login'>>;
 
-type UserWithoutMeta = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'boards'>;
+export type GetUserByPayload = Pick<UserModel, 'id'> | Pick<UserModel, 'login'>;
 
-export type UpdateUserPayload = Partial<UserWithoutMeta>;
+export type UpdateUserPayload = Partial<Omit<UserModel, 'id' | 'boards'>>;
