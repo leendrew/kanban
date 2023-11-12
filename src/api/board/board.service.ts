@@ -64,7 +64,7 @@ export class BoardService {
     try {
       const boards = await this.repository.find({
         where: payload,
-        order: { id: 'asc', index: 'asc', tasks: { index: 'asc' } },
+        order: { index: 'asc', tasks: { index: 'asc' } },
       });
 
       return boards;

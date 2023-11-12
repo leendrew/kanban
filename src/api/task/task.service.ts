@@ -60,7 +60,7 @@ export class TaskService {
     try {
       const tasks = await this.repository.find({
         where: payload,
-        order: { id: 'asc', index: 'asc' },
+        order: { index: 'asc' },
       });
 
       return tasks;
