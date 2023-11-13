@@ -108,7 +108,7 @@ export class AuthService {
     return this.userService.getOneBy({ id: payload.sub });
   }
 
-  async refresh(payload: RefreshPayload): Promise<TokenResponse> {
+  async refresh(payload: RefreshPayload): Promise<AuthResponse> {
     const { refreshToken: token } = payload;
 
     try {
@@ -121,7 +121,9 @@ export class AuthService {
         throw new Error("User doesn't exist");
       }
 
-      return this.createTokenPairs({ id: user.id, login: user.login });
+      const tokens = await this.createTokenPairs({ id: user.id, login: user.login });
+
+      return { user, tokens };
     } catch (e) {
       console.error(e);
       throw e;
