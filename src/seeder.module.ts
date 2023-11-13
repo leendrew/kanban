@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
-import { ConfigModule } from './config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from './config';
 import { CryptoService, TypeOrmService } from './shared';
 import { HashService } from './common';
 import { User } from './api/user/user.entity';
