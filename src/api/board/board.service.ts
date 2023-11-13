@@ -66,7 +66,7 @@ export class BoardService {
     try {
       const board = await this.repository
         .createQueryBuilder('b')
-        .select(['b.id', 'b.name', 'b.index', 'b.tasks', 'u.id'])
+        .select(['b.id', 'b.name', 'b.index', 'u.id'])
         .leftJoin('b.user', 'u')
         .where(payload)
         .getOne();
@@ -103,6 +103,7 @@ export class BoardService {
       }
 
       const currentBoard = await this.getOneByWithRelations({ id });
+      console.log(currentBoard);
 
       if (index !== undefined) {
         const boards = await this.getAllBy({ user: { id: currentBoard.user.id } });
@@ -122,7 +123,7 @@ export class BoardService {
       }
 
       await this.repository.update(id, { name, index, user });
-      const updatedBoard = await this.repository.findOneBy({ id });
+      const updatedBoard = await this.getOneBy({ id });
 
       return updatedBoard as BoardModel;
     } catch (e) {
