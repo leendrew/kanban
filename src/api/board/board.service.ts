@@ -62,6 +62,18 @@ export class BoardService {
     }
   }
 
+  async getOneByWithRelations(payload: GetBoardByPayload): Promise<BoardModel> {
+    try {
+      const board = await this.repository
+        .createQueryBuilder('b')
+        .select(['b.id', 'b.name', 'b.index', 'b.tasks', 'u.id'])
+        .leftJoin('b.user', 'u')
+        .where(payload)
+        .getOne();
+      if (!board) {
+        throw new Error("Board doesn't exist");
+      }
+
       return board;
     } catch (e) {
       console.error(e);
@@ -90,10 +102,7 @@ export class BoardService {
         throw new Error('Board index cannot be negative');
       }
 
-      const currentBoard = await this.getOneBy({ id });
-      if (!currentBoard) {
-        throw new Error("Board doesn't exist");
-      }
+      const currentBoard = await this.getOneByWithRelations({ id });
 
       if (index !== undefined) {
         const boards = await this.getAllBy({ user: { id: currentBoard.user.id } });

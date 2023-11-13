@@ -59,6 +59,18 @@ export class TaskService {
     }
   }
 
+  async getOneByWithRelations(payload: GetTaskByPayload): Promise<TaskModel> {
+    try {
+      const task = await this.repository
+        .createQueryBuilder('t')
+        .select(['t.id', 't.name', 't.isCompleted', 't.index', 'b.id'])
+        .leftJoin('t.board', 'b')
+        .where(payload)
+        .getOne();
+      if (!task) {
+        throw new Error("Task doesn't exist");
+      }
+
       return task;
     } catch (e) {
       console.error(e);
@@ -87,10 +99,7 @@ export class TaskService {
         throw new Error('Task index cannot be negative');
       }
 
-      const currentTask = await this.getOneBy({ id });
-      if (!currentTask) {
-        throw new Error("Task doesn't exist");
-      }
+      const currentTask = await this.getOneByWithRelations({ id });
 
       if (index !== undefined) {
         const tasks = await this.getAllBy({ board: { id: currentTask.board.id } });
