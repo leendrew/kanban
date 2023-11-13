@@ -20,7 +20,8 @@ export class UserService {
 
   async createOne(payload: CreateUserPayload): Promise<UserModel> {
     try {
-      const user = this.repository.create(payload);
+      const hashedPassword = await this.hashService.hash(payload.password);
+      const user = this.repository.create({ ...payload, password: hashedPassword });
       const createdUser = await this.repository.save(user);
 
       return createdUser;
