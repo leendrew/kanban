@@ -34,7 +34,7 @@ export class TaskController {
   }
 
   @Get('/:id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<TaskModel | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<TaskModel> {
     return this.service.getOneBy({ id });
   }
 

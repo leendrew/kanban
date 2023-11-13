@@ -45,9 +45,19 @@ export class TaskService {
     }
   }
 
-  async getOneBy(payload: GetTaskByPayload): Promise<TaskModel | null> {
+  async getOneBy(payload: GetTaskByPayload): Promise<TaskModel> {
     try {
       const task = await this.repository.findOneBy(payload);
+      if (!task) {
+        throw new Error("Task doesn't exist");
+      }
+
+      return task;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
 
       return task;
     } catch (e) {
@@ -73,7 +83,7 @@ export class TaskService {
   async updateOne(id: Task['id'], payload: UpdateTaskPayload): Promise<TaskModel> {
     const { name, isCompleted, index, boardId } = payload;
     try {
-      if (index && index < 0) {
+      if (index !== undefined && index < 0) {
         throw new Error('Task index cannot be negative');
       }
 
@@ -82,7 +92,7 @@ export class TaskService {
         throw new Error("Task doesn't exist");
       }
 
-      if (index) {
+      if (index !== undefined) {
         const tasks = await this.getAllBy({ board: { id: currentTask.board.id } });
         if (index > tasks.length - 1) {
           throw new Error('Task index cannot be greater, than boards length');
@@ -91,7 +101,7 @@ export class TaskService {
 
       let board: BoardModel | undefined;
 
-      if (boardId) {
+      if (boardId !== undefined) {
         const dbBoard = await this.boardService.getOneBy({ id: boardId });
         if (!dbBoard) {
           throw new Error("Board doesn't exist");

@@ -30,12 +30,15 @@ export class UserService {
     }
   }
 
-  async getOneBy(payload: GetUserByPayload): Promise<UserModel | null> {
+  async getOneBy(payload: GetUserByPayload): Promise<UserModel> {
     try {
       const user = await this.repository.findOne({
         where: payload,
         order: { boards: { index: 'asc', tasks: { index: 'asc' } } },
       });
+      if (!user) {
+        throw new Error("User doesn't exist");
+      }
 
       return user;
     } catch (e) {
@@ -44,7 +47,7 @@ export class UserService {
     }
   }
 
-  async getOneByWithPassword(payload: GetUserByPayload): Promise<UserWithoutRelations | null> {
+  async getOneByWithPassword(payload: GetUserByPayload): Promise<UserWithoutRelations> {
     try {
       const user = await this.repository
         .createQueryBuilder('u')
@@ -52,6 +55,9 @@ export class UserService {
         .addSelect('u.password')
         .where(payload)
         .getOne();
+      if (!user) {
+        throw new Error("User doesn't exist");
+      }
 
       return user;
     } catch (e) {

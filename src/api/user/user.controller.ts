@@ -26,7 +26,7 @@ export class UserController {
   }
 
   @Get('/')
-  findAll(@Query() query: GetUserQueryDto): Promise<UserModel | null | UserModel[]> {
+  findAll(@Query() query: GetUserQueryDto): Promise<UserModel | UserModel[]> {
     const { login } = query;
     if (login) {
       return this.service.getOneBy({ login });
@@ -35,7 +35,7 @@ export class UserController {
   }
 
   @Get('/:id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<UserModel | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<UserModel> {
     return this.service.getOneBy({ id });
   }
 

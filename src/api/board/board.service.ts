@@ -45,13 +45,22 @@ export class BoardService {
     }
   }
 
-  async getOneBy(payload: GetBoardByPayload): Promise<BoardModel | null> {
+  async getOneBy(payload: GetBoardByPayload): Promise<BoardModel> {
     try {
       const board = await this.repository.findOne({
         where: payload,
-        relations: ['user'],
         order: { tasks: { index: 'asc' } },
       });
+      if (!board) {
+        throw new Error("Board doesn't exist");
+      }
+
+      return board;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
 
       return board;
     } catch (e) {
@@ -77,7 +86,7 @@ export class BoardService {
   async updateOne(id: BoardModel['id'], payload: UpdateBoardPayload): Promise<BoardModel> {
     const { name, userId, index } = payload;
     try {
-      if (index && index < 0) {
+      if (index !== undefined && index < 0) {
         throw new Error('Board index cannot be negative');
       }
 
@@ -86,7 +95,7 @@ export class BoardService {
         throw new Error("Board doesn't exist");
       }
 
-      if (index) {
+      if (index !== undefined) {
         const boards = await this.getAllBy({ user: { id: currentBoard.user.id } });
         if (index > boards.length - 1) {
           throw new Error('Board index cannot be greater, than boards length');
@@ -95,7 +104,7 @@ export class BoardService {
 
       let user: UserModel | undefined;
 
-      if (userId) {
+      if (userId !== undefined) {
         const dbUser = await this.userService.getOneBy({ id: userId });
         if (!dbUser) {
           throw new Error("User doesn't exist");

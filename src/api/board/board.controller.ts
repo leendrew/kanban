@@ -26,7 +26,7 @@ export class BoardController {
   }
 
   @Get('/')
-  findAll(@Query() query: GetManyBoardsQueryDto): Promise<BoardModel | null | BoardModel[]> {
+  findAll(@Query() query: GetManyBoardsQueryDto): Promise<BoardModel | BoardModel[]> {
     const { name, userId } = query;
     const payload = { name, user: { id: userId } };
 
@@ -34,7 +34,7 @@ export class BoardController {
   }
 
   @Get('/:id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<BoardModel | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<BoardModel> {
     return this.service.getOneBy({ id });
   }
 
