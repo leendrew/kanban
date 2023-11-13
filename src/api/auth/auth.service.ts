@@ -104,7 +104,7 @@ export class AuthService {
     return { access, refresh };
   }
 
-  validate(payload: TokenPayload): Promise<UserModel | null> {
+  validate(payload: TokenPayload): Promise<UserModel> {
     return this.userService.getOneBy({ id: payload.sub });
   }
 
