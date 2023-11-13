@@ -40,12 +40,12 @@ export class UserController {
   }
 
   @Patch('/:id')
-  updateOne(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto) {
+  updateOne(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto): Promise<UserModel> {
     return this.service.updateOne(id, dto);
   }
 
   @Delete('/:id')
-  deleteOne(@Param('id', ParseIntPipe) id: number) {
+  deleteOne(@Param('id', ParseIntPipe) id: number): Promise<UserModel> {
     return this.service.deleteOne(id);
   }
 }

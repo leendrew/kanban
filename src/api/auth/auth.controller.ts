@@ -2,7 +2,6 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import type { AuthResponse } from './auth.types';
 import type { RegisterDto, LoginDto, RefreshDto } from './dto';
-import type { TokenResponse } from './jwt';
 
 @Controller('/auth')
 export class AuthController {
@@ -19,7 +18,7 @@ export class AuthController {
   }
 
   @Post('/refresh')
-  refresh(@Body() dto: RefreshDto): Promise<TokenResponse> {
+  refresh(@Body() dto: RefreshDto): Promise<AuthResponse> {
     return this.service.refresh(dto);
   }
 }

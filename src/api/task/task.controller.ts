@@ -39,12 +39,12 @@ export class TaskController {
   }
 
   @Patch('/:id')
-  updateOne(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTaskDto) {
+  updateOne(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTaskDto): Promise<TaskModel> {
     return this.service.updateOne(id, dto);
   }
 
   @Delete('/:id')
-  deleteOne(@Param('id', ParseIntPipe) id: number) {
+  deleteOne(@Param('id', ParseIntPipe) id: number): Promise<TaskModel> {
     return this.service.deleteOne(id);
   }
 }
