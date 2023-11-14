@@ -12,6 +12,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = app.get(ConfigService);
+  const isDev = config.app.nodeEnv === 'development';
+
+  if (isDev) {
+    app.enableCors();
+  }
 
   await app.listen(config.app.port);
 }
