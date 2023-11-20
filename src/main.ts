@@ -15,7 +15,7 @@ async function bootstrap() {
   const isDev = config.app.nodeEnv === 'development';
 
   if (isDev) {
-    app.enableCors();
+    app.enableCors({ origin: config.cors.origin.split(',') });
   }
 
   await app.listen(config.app.port);

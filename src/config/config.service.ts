@@ -54,6 +54,13 @@ type JWTEnv = {
   };
 };
 
+type CORSEnv = {
+  origin: {
+    key: 'CORS_ORIGIN';
+    type: string;
+  };
+};
+
 @Injectable()
 export class ConfigService {
   constructor(private readonly configService: NestConfigService) {}
@@ -91,6 +98,12 @@ export class ConfigService {
       secret: this.getEnvValue<JWTEnv, string>('JWT_SECRET'),
       accessTtl: this.getEnvValue<JWTEnv, number>('JWT_ACCESS_TTL', true),
       refreshTtl: this.getEnvValue<JWTEnv, number>('JWT_REFRESH_TTL', true),
+    };
+  }
+
+  public get cors(): ConfigType<CORSEnv> {
+    return {
+      origin: this.getEnvValue<CORSEnv, string>('CORS_ORIGIN'),
     };
   }
 }
