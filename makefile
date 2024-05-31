@@ -8,7 +8,7 @@ up-db-dev:
 	docker-compose up db -d
 
 up-app-dev:
-	yarn start:dev
+	pnpm start:dev
 
 # stop
 stop-dev: stop-db-dev
@@ -46,7 +46,7 @@ down-app-prod:
 # db seed
 
 db-seed:
-	yarn db:seed
+	pnpm db:seed
 
 # prod db migrations
 

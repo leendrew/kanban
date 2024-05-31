@@ -19,16 +19,16 @@
 
 ```bash
 cp .env.example .env
-yarn
+pnpm
 docker-compose up db -d
-yarn start:dev
+pnpm start:dev
 ```
 
 or using make
 
 ```bash
 cp .env.example .env
-yarn
+pnpm
 make up-dev
 ```
 
@@ -41,7 +41,7 @@ make down-dev
 ### db seed
 
 ```bash
-yarn db:seed
+pnpm db:seed
 ```
 
 or using make
